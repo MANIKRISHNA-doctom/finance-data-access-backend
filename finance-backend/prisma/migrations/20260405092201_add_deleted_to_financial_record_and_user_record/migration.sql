@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "FinancialRecord" ADD COLUMN     "deleted" BOOLEAN NOT NULL DEFAULT false,
+ALTER COLUMN "date" SET DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "deleted" BOOLEAN NOT NULL DEFAULT false;
