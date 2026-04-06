@@ -101,7 +101,6 @@ record_route.get("/records/:id", authRoleMiddleware([]), async (req, res) => {
           message: "Valid User ID is required"
         });
       }
-    //console.log(id);
     const record = await prisma.financialRecord.findUnique({
       where: {
         id: Number(id),
@@ -219,8 +218,6 @@ record_route.get('/restoring_record/:id',authRoleMiddleware(["ADMIN"]),async (re
 record_route.post("/records", authRoleMiddleware(), async (req, res) => {
   try {
     let { type, category, startDate, endDate, minAmount, maxAmount } = req.body;
-    // const parsedMinAmount = minAmount !== undefined ? parseFloat(minAmount) : undefined;
-    // const parsedMaxAmount =  maxAmount !== undefined ? parseFloat(maxAmount) : undefined;
     if (!startDate && !endDate) {
       const today = new Date();
       const lastMonth = new Date();
