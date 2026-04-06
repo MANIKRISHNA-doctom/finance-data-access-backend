@@ -1,6 +1,6 @@
 # Finance Data Access Backend API
 
-A secure, role-based RESTful backend API built with **Node.js**, **Express**, **Prisma ORM**, and **PostgreSQL** for managing personal or organizational financial records. The API supports user authentication, role-based access control, financial record management, and a rich analytics dashboard.
+A secure Node.js and Express REST API for personal finance management, featuring JWT cookie-based authentication, role-based access control (Admin, Analyst, Viewer), and full CRUD with soft delete and restore for both users and financial records. Admins can create single or bulk users and records, update entries, permanently delete data, and manage user account status (Active/Inactive), while all users can filter records by type, category, date range, and amount range. The built-in analytics dashboard delivers real-time net balance, category-wise breakdowns, recent activity, monthly and weekly income/expense trends, and month-over-month profit-loss percentage change — with trend data restricted to non-Viewer roles. Powered by Prisma ORM with PostgreSQL, bcrypt password hashing, and environment-based configuration for a production-ready backend setup.
 
 ---
 
@@ -10,7 +10,7 @@ A secure, role-based RESTful backend API built with **Node.js**, **Express**, **
 - **Framework:** Express.js
 - **ORM:** Prisma
 - **Database:** PostgreSQL
-- **Authentication:** JWT (JSON Web Tokens) via HTTP-only cookies
+- **Authentication:** JWT (JSON Web Tokens)
 - **Password Hashing:** bcrypt
 - **Environment Config:** dotenv
 
@@ -20,7 +20,7 @@ A secure, role-based RESTful backend API built with **Node.js**, **Express**, **
 
 ```
 finance-backend/
-├── index.js                        # App entry point
+├── index.js                        # Server entry point
 ├── middle_ware/
 │   └── authRoleMiddleware.js       # JWT auth & role guard
 ├── routes/
@@ -108,7 +108,8 @@ PORT=5000
 | Login / Logout                | ✅     | ✅      | ✅    |
 | View own records              | ✅     | ✅      | ✅    |
 | View dashboard summary        | ✅     | ✅      | ✅    |
-| View monthly/weekly trends    | ❌     | ✅      | ✅    |
+| View monthly/weekly 
+  trends/  monthly profit-loss  | ❌     | ✅      | ✅    |
 | Create / Update records       | ❌     | ❌      | ✅    |
 | Soft delete / Restore records | ❌     | ❌      | ✅    |
 | Permanently delete records    | ❌     | ❌      | ✅    |
@@ -121,7 +122,8 @@ PORT=5000
 ### Base URL
 
 ```
-http://localhost:5000
+ Local: http://localhost:5000
+ Production: https://finance-data-access-api.onrender.com
 ```
 
 ---
@@ -158,7 +160,7 @@ http://localhost:5000
 
 | Method | Endpoint           | Auth Required | Role           | Description                             |
 |--------|--------------------|---------------|----------------|-----------------------------------------|
-| GET    | `/user_dashboard/` | Yes           | Any            | Returns financial summary and analytics |
+| GET    | `/user_dashboard` | Yes           | Any            | Returns financial summary and analytics |
 
 **Dashboard Response includes:**
 - Total income and total expenses
@@ -170,7 +172,21 @@ http://localhost:5000
 - Monthly profit/loss with percentage change *(ANALYST & ADMIN only)*
 
 ---
+## User Registration
+Create a new user by sending a POST request:
 
+POST /user/create  
+Content-Type: application/json
+
+### Request Body
+```bash
+{
+  "name": "John Doe",
+  "email": "john@gmail.com",
+  "password": "123",
+  "role": "ADMIN"
+}
+```
 ## Authentication
 
 Authentication uses **JWT stored in HTTP-only cookies**. Tokens expire after **1 hour**.
@@ -184,6 +200,12 @@ Content-Type: application/json
 {
   "email": "user@example.com",
   "password": "yourpassword"
+}
+```
+## Demo Credentials
+```bash
+{ "email" : "john@gmail.com,
+  "password : "123"
 }
 ```
 
@@ -216,6 +238,4 @@ This API supports **soft deletion** for both users and records. Soft-deleted ite
 
 ---
 
-## License
 
-This project is open source. Feel free to use and modify it for your own projects.
